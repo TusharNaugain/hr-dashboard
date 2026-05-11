@@ -1,0 +1,14 @@
+{
+  "name": "hr-automation-dashboard",
+  "version": "1.0.0",
+  "description": "HR Automation Dashboard — full-stack, Excel-linked, auto-refresh",
+  "scripts": {
+    "dev": "concurrently --names \"API,UI\" --prefix-colors \"cyan,magenta\" \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "cd backend && node server.js",
+    "dev:frontend": "cd frontend && npm run dev",
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

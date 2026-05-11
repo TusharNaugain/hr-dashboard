@@ -10,7 +10,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const EXCEL_PATH = path.join(__dirname, '../../HR_Dashboard_Data.xlsx');
+const EXCEL_PATH = path.join(__dirname, '../HR_Dashboard_Data.xlsx');
 
 // ─── Auto-refresh: SSE clients + file watcher ────────────────────────────────
 let dataVersion = Date.now();          // bumped on every Excel change

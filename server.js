@@ -10,7 +10,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const EXCEL_PATH = path.join(__dirname, '../HR_Dashboard_Data.xlsx');
+const EXCEL_PATH = path.join(__dirname, 'HR_Dashboard_Data.xlsx');
 
 // ─── Auto-refresh: SSE clients + file watcher ────────────────────────────────
 let dataVersion = Date.now();          // bumped on every Excel change
@@ -24,13 +24,19 @@ function broadcastChange() {
   }
 }
 
-// Debounce: Excel often triggers multiple rapid events on a single save
-let debounceTimer = null;
-watch(EXCEL_PATH, () => {
-  clearTimeout(debounceTimer);
-  debounceTimer = setTimeout(broadcastChange, 500);
-});
-console.log(`[watch] Watching ${EXCEL_PATH} for changes…`);
+// Disable file watching on Vercel (Serverless environments don't support persistent watch)
+if (!process.env.VERCEL) {
+  let debounceTimer = null;
+  try {
+    watch(EXCEL_PATH, () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(broadcastChange, 500);
+    });
+    console.log(`[watch] Watching ${EXCEL_PATH} for changes…`);
+  } catch (err) {
+    console.log('[watch] Watcher failed to start:', err.message);
+  }
+}
 
 // ─── SSE endpoint — browsers subscribe here ──────────────────────────────────
 app.get('/api/events', (req, res) => {
@@ -431,8 +437,12 @@ app.get('/api/org-chart', (req, res) => {
   res.json({ nodes: allEmps, roots });
 });
 
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => {
-  console.log(`HR Dashboard API running on http://localhost:${PORT}`);
-  console.log(`Auto-refresh via SSE: http://localhost:${PORT}/api/events`);
-});
+if (!process.env.VERCEL) {
+  const PORT = process.env.PORT || 3001;
+  app.listen(PORT, () => {
+    console.log(`HR Dashboard API running on http://localhost:${PORT}`);
+    console.log(`Auto-refresh via SSE: http://localhost:${PORT}/api/events`);
+  });
+}
+
+export default app;

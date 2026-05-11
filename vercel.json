@@ -1,0 +1,17 @@
+{
+  "functions": {
+    "api/**/*.js": {
+      "includeFiles": "HR_Dashboard_Data.xlsx"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/api/index.js"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}

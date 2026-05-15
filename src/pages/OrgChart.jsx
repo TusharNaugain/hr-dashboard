@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { useApi, Loading, avatarClass, initials } from '../utils.jsx';
+import { useQuery } from '@tanstack/react-query';
+import { Loading, avatarClass, initials } from '../utils.jsx';
 import { api } from '../api.js';
 
 const DEPT_COLORS = {
@@ -66,12 +67,16 @@ function OrgNode({ node, depth = 0 }) {
 }
 
 export default function OrgChart() {
-  const { data, loading } = useApi(api.orgChart);
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['orgChart'],
+    queryFn: api.orgChart,
+  });
   const [filterDept, setFilterDept] = useState('All');
   const [filterRegion, setFilterRegion] = useState('All');
   const [search, setSearch] = useState('');
 
-  if (loading) return <Loading />;
+  if (isLoading) return <Loading />;
+  if (error) return <div className="alert-banner danger"><span className="alert-icon">⚠️</span><div className="alert-content"><h4>Error Loading Org Chart</h4><p>{error.message}</p></div></div>;
 
   const { nodes = [], roots = [] } = data || {};
 

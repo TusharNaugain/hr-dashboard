@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import Dashboard from './pages/Dashboard.jsx';
 import Employees from './pages/Employees.jsx';
 import Finance from './pages/Finance.jsx';
@@ -37,48 +38,40 @@ const PAGE_TITLES = {
 
 export default function App() {
   const [page, setPage] = useState('dashboard');
-  const [alertCount, setAlertCount] = useState(0);
-
-  // ── refreshKey: incrementing it remounts the current page so it re-fetches ──
-  const [refreshKey, setRefreshKey] = useState(0);
+  const queryClient = useQueryClient();
 
   // ── Refresh notification toast ──
   const [showToast, setShowToast] = useState(false);
 
-  const fetchAlerts = useCallback(() => {
-    api.dashboard().then(d => {
-      const total = (d?.alerts?.internLWDAlerts?.length || 0) + (d?.alerts?.probationAlerts?.length || 0);
-      setAlertCount(total);
-    }).catch(() => {});
-  }, []);
+  const { data: dashboardData } = useQuery({
+    queryKey: ['dashboard'],
+    queryFn: api.dashboard,
+  });
 
-  // Initial load
-  useEffect(() => { fetchAlerts(); }, [fetchAlerts]);
+  const alertCount = (dashboardData?.alerts?.internLWDAlerts?.length || 0) + 
+                   (dashboardData?.alerts?.probationAlerts?.length || 0);
 
-  // ── Auto-refresh: SSE listener — when Excel changes, bump refreshKey ──
+  // ── Auto-refresh: SSE listener ──
   useAutoRefresh(useCallback(() => {
-    setRefreshKey(k => k + 1);
-    fetchAlerts();
-    // Show brief toast notification
+    queryClient.invalidateQueries(); // Invalidate all queries to trigger re-fetch
     setShowToast(true);
     setTimeout(() => setShowToast(false), 3500);
-  }, [fetchAlerts]));
+  }, [queryClient]));
 
   const sections = [...new Set(NAV.map(n => n.section))];
 
   const renderPage = () => {
-    // key={refreshKey} forces remount → re-fetch on Excel change
     switch (page) {
-      case 'dashboard': return <Dashboard key={refreshKey} />;
-      case 'employees': return <Employees key={refreshKey} />;
-      case 'org': return <OrgChart key={refreshKey} />;
-      case 'productivity': return <Productivity key={refreshKey} />;
-      case 'finance': return <Finance key={refreshKey} />;
-      case 'rm': return <ResourceAllocation key={refreshKey} />;
-      case 'risk': return <RiskReport key={refreshKey} />;
-      case 'attrition': return <Attrition key={refreshKey} />;
-      case 'alerts': return <Alerts key={refreshKey} />;
-      default: return <Dashboard key={refreshKey} />;
+      case 'dashboard': return <Dashboard />;
+      case 'employees': return <Employees />;
+      case 'org': return <OrgChart />;
+      case 'productivity': return <Productivity />;
+      case 'finance': return <Finance />;
+      case 'rm': return <ResourceAllocation />;
+      case 'risk': return <RiskReport />;
+      case 'attrition': return <Attrition />;
+      case 'alerts': return <Alerts />;
+      default: return <Dashboard />;
     }
   };
 

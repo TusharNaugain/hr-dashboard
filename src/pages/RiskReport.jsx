@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { useApi, Loading, riskBadge } from '../utils.jsx';
+import { useQuery } from '@tanstack/react-query';
+import { Loading, riskBadge } from '../utils.jsx';
 import { api } from '../api.js';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from 'recharts';
 
@@ -17,11 +18,15 @@ const TT = ({ active, payload, label }) => {
 };
 
 export default function RiskReport() {
-  const { data, loading } = useApi(api.riskReport);
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['riskReport'],
+    queryFn: api.riskReport,
+  });
   const [filter, setFilter] = useState('All');
   const [regionFilter, setRegionFilter] = useState('All');
 
-  if (loading) return <Loading />;
+  if (isLoading) return <Loading />;
+  if (error) return <div className="alert-banner danger"><span className="alert-icon">⚠️</span><div className="alert-content"><h4>Error Loading Risk Report</h4><p>{error.message}</p></div></div>;
 
   const filtered = (data||[]).filter(r => {
     if (filter !== 'All' && r.riskLevel !== filter) return false;

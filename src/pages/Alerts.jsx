@@ -1,10 +1,15 @@
-import { useApi, Loading, daysUntil, avatarClass, initials } from '../utils.jsx';
+import { useQuery } from '@tanstack/react-query';
+import { Loading, daysUntil, avatarClass, initials } from '../utils.jsx';
 import { api } from '../api.js';
 
 export default function Alerts() {
-  const { data, loading } = useApi(api.dashboard);
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['dashboard'],
+    queryFn: api.dashboard,
+  });
 
-  if (loading) return <Loading />;
+  if (isLoading) return <Loading />;
+  if (error) return <div className="alert-banner danger"><span className="alert-icon">⚠️</span><div className="alert-content"><h4>Error Loading Alerts</h4><p>{error.message}</p></div></div>;
 
   const internAlerts = data?.alerts?.internLWDAlerts || [];
   const probAlerts = data?.alerts?.probationAlerts || [];

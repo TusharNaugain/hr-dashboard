@@ -1,23 +1,3 @@
-import { useState, useEffect } from 'react';
-
-export function useApi(fetchFn, deps = []) {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    let cancelled = false;
-    setLoading(true);
-    setError(null);
-    fetchFn()
-      .then(d => { if (!cancelled) { setData(d); setLoading(false); } })
-      .catch(e => { if (!cancelled) { setError(e.message); setLoading(false); } });
-    return () => { cancelled = true; };
-  }, deps);
-
-  return { data, loading, error };
-}
-
 export function avatarClass(name) {
   const classes = ['av-1','av-2','av-3','av-4','av-5','av-6','av-7','av-8'];
   let hash = 0;
@@ -70,9 +50,34 @@ export function riskBadge(level) {
 
 export function Loading() {
   return (
-    <div className="loading-spinner">
-      <div className="spinner"></div>
-      <p className="loading-text">Loading data…</p>
+    <div style={{ padding: '20px' }}>
+      <div className="skeleton skeleton-title"></div>
+      <div className="stats-grid">
+        <div className="skeleton skeleton-card"></div>
+        <div className="skeleton skeleton-card"></div>
+        <div className="skeleton skeleton-card"></div>
+        <div className="skeleton skeleton-card"></div>
+      </div>
+      <div className="grid-2" style={{ marginTop: 24 }}>
+        <div className="skeleton skeleton-card" style={{ height: 260 }}></div>
+        <div className="skeleton skeleton-card" style={{ height: 260 }}></div>
+      </div>
+    </div>
+  );
+}
+
+export function SkeletonTable({ rows = 5 }) {
+  return (
+    <div style={{ padding: '20px' }}>
+      {[...Array(rows)].map((_, i) => (
+        <div key={i} style={{ display: 'flex', gap: 12, marginBottom: 12 }}>
+          <div className="skeleton skeleton-circle"></div>
+          <div style={{ flex: 1 }}>
+            <div className="skeleton skeleton-text" style={{ width: '30%' }}></div>
+            <div className="skeleton skeleton-text" style={{ width: '100%' }}></div>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

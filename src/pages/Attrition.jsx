@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { useApi, Loading } from '../utils.jsx';
+import { useQuery } from '@tanstack/react-query';
+import { Loading } from '../utils.jsx';
 import { api } from '../api.js';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, PieChart, Pie, LineChart, Line } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, PieChart, Pie } from 'recharts';
 
 const QUARTERS = ['Q1-2025', 'Q2-2025', 'Q3-2025', 'Q4-2025'];
 const COLORS = ['#ef4444','#f59e0b','#6366f1','#10b981','#8b5cf6','#06b6d4'];
@@ -18,12 +19,19 @@ const TT = ({ active, payload, label }) => {
 };
 
 export default function Attrition() {
-  const { data: offboarded, loading: oLoading } = useApi(api.offboarded);
-  const { data: employees, loading: eLoading } = useApi(api.employees);
+  const { data: offboarded, isLoading: oLoading, error: oError } = useQuery({
+    queryKey: ['offboarded'],
+    queryFn: api.offboarded,
+  });
+  const { data: employees, isLoading: eLoading, error: eError } = useQuery({
+    queryKey: ['employees'],
+    queryFn: api.employees,
+  });
   const [quarterFilter, setQuarterFilter] = useState('All');
   const [regionFilter, setRegionFilter] = useState('All');
 
   if (oLoading || eLoading) return <Loading />;
+  if (oError || eError) return <div className="alert-banner danger"><span className="alert-icon">⚠️</span><div className="alert-content"><h4>Error Loading Attrition Data</h4><p>{(oError || eError).message}</p></div></div>;
 
   const activeCount = (employees||[]).length;
 

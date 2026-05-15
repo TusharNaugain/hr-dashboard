@@ -4,14 +4,6 @@
 
 ---
 
-## ⚡ Quick Start
-
-```bash
-cd hr-dashboard
-./start.sh
-```
-
-Browser mein kholo: **http://localhost:5173**
 
 Ya manually dono servers chalaao:
 

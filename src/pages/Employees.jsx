@@ -1,9 +1,13 @@
 import { useState } from 'react';
-import { useApi, Loading, avatarClass, initials, statusBadge, regionBadge, daysUntil } from '../utils.jsx';
+import { useQuery } from '@tanstack/react-query';
+import { Loading, avatarClass, initials, statusBadge, regionBadge, daysUntil } from '../utils.jsx';
 import { api } from '../api.js';
 
 export default function Employees() {
-  const { data: employees, loading } = useApi(api.employees);
+  const { data: employees, isLoading, error } = useQuery({
+    queryKey: ['employees'],
+    queryFn: api.employees,
+  });
   const [search, setSearch] = useState('');
   const [region, setRegion] = useState('All');
   const [dept, setDept] = useState('All');
@@ -11,7 +15,8 @@ export default function Employees() {
   const [view, setView] = useState('table');
   const [expandedEmp, setExpandedEmp] = useState(null);
 
-  if (loading) return <Loading />;
+  if (isLoading) return <Loading />;
+  if (error) return <div className="alert-banner danger"><span className="alert-icon">⚠️</span><div className="alert-content"><h4>Error Loading Employees</h4><p>{error.message}</p></div></div>;
 
   const depts = ['All', ...new Set((employees || []).map(e => e.department).filter(Boolean))].sort();
 

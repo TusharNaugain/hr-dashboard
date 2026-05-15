@@ -1,8 +1,9 @@
-import { useApi, Loading, daysUntil, formatINR, formatUSD, riskBadge } from '../utils.jsx';
+import { Loading, daysUntil, formatINR, formatUSD, riskBadge } from '../utils.jsx';
 import { api } from '../api.js';
+import { useQuery } from '@tanstack/react-query';
 import {
   BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, Tooltip,
-  ResponsiveContainer, Legend, LineChart, Line
+  ResponsiveContainer, Legend
 } from 'recharts';
 
 const COLORS = ['#6366f1','#10b981','#f59e0b','#ef4444','#8b5cf6','#06b6d4','#ec4899','#14b8a6'];
@@ -22,10 +23,13 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 export default function Dashboard() {
-  const { data, loading, error } = useApi(api.dashboard);
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['dashboard'],
+    queryFn: api.dashboard,
+  });
 
-  if (loading) return <Loading />;
-  if (error) return <div className="alert-banner danger"><span className="alert-icon">⚠️</span><div className="alert-content"><h4>Error Loading Dashboard</h4><p>{error}</p></div></div>;
+  if (isLoading) return <Loading />;
+  if (error) return <div className="alert-banner danger"><span className="alert-icon">⚠️</span><div className="alert-content"><h4>Error Loading Dashboard</h4><p>{error.message}</p></div></div>;
 
   const { summary, alerts, departmentDistribution, attritionRates, riskSummary } = data;
 

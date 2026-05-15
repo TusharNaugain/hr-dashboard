@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { useApi, Loading } from '../utils.jsx';
+import { useQuery } from '@tanstack/react-query';
+import { Loading } from '../utils.jsx';
 import { api } from '../api.js';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
-  RadarChart, Radar, PolarGrid, PolarAngleAxis, LineChart, Line, Legend
+  LineChart, Line
 } from 'recharts';
 
 const MONTHS = ['Jan-2025','Feb-2025','Mar-2025','Apr-2025','May-2025','Jun-2025',
@@ -21,13 +22,17 @@ const TT = ({ active, payload, label }) => {
 };
 
 export default function Productivity() {
-  const { data, loading } = useApi(api.productivity);
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['productivity'],
+    queryFn: api.productivity,
+  });
   const [search, setSearch] = useState('');
   const [region, setRegion] = useState('All');
   const [dept, setDept] = useState('All');
   const [selected, setSelected] = useState(null);
 
-  if (loading) return <Loading />;
+  if (isLoading) return <Loading />;
+  if (error) return <div className="alert-banner danger"><span className="alert-icon">⚠️</span><div className="alert-content"><h4>Error Loading Productivity Data</h4><p>{error.message}</p></div></div>;
 
   const depts = ['All', ...new Set((data||[]).map(e=>e.department).filter(Boolean))].sort();
 

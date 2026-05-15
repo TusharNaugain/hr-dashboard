@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { useApi, Loading, formatINR, formatUSD } from '../utils.jsx';
+import { useQuery } from '@tanstack/react-query';
+import { Loading, formatINR, formatUSD } from '../utils.jsx';
 import { api } from '../api.js';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
-  PieChart, Pie, Cell, ScatterChart, Scatter
+  PieChart, Pie, Cell
 } from 'recharts';
 
 const COLORS = ['#6366f1','#10b981','#f59e0b','#ef4444','#8b5cf6','#06b6d4','#ec4899','#14b8a6','#f97316','#84cc16'];
@@ -19,14 +20,18 @@ const TT = ({ active, payload, label }) => {
 };
 
 export default function Finance() {
-  const { data, loading } = useApi(api.finance);
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['finance'],
+    queryFn: api.finance,
+  });
   const [search, setSearch] = useState('');
   const [region, setRegion] = useState('All');
   const [dept, setDept] = useState('All');
   const [sortBy, setSortBy] = useState('annualCTCInr');
   const [sortDir, setSortDir] = useState('desc');
 
-  if (loading) return <Loading />;
+  if (isLoading) return <Loading />;
+  if (error) return <div className="alert-banner danger"><span className="alert-icon">⚠️</span><div className="alert-content"><h4>Error Loading Finance Data</h4><p>{error.message}</p></div></div>;
 
   const depts = ['All', ...new Set((data||[]).map(e=>e.department).filter(Boolean))].sort();
 

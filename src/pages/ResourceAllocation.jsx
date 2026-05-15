@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { useApi, Loading } from '../utils.jsx';
+import { useQuery } from '@tanstack/react-query';
+import { Loading } from '../utils.jsx';
 import { api } from '../api.js';
 
 const MONTHS = ['Jan-2025','Feb-2025','Mar-2025','Apr-2025','May-2025','Jun-2025',
@@ -38,14 +39,18 @@ function AllocBar({ value, project }) {
 }
 
 export default function ResourceAllocation() {
-  const { data, loading } = useApi(api.rmData);
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['rmData'],
+    queryFn: api.rmData,
+  });
   const [search, setSearch] = useState('');
   const [region, setRegion] = useState('All');
   const [dept, setDept] = useState('All');
   const [selectedMonth, setSelectedMonth] = useState('Dec-2025');
   const [expanded, setExpanded] = useState(null);
 
-  if (loading) return <Loading />;
+  if (isLoading) return <Loading />;
+  if (error) return <div className="alert-banner danger"><span className="alert-icon">⚠️</span><div className="alert-content"><h4>Error Loading RM Data</h4><p>{error.message}</p></div></div>;
 
   const depts = ['All', ...new Set((data||[]).map(e=>e.department).filter(Boolean))].sort();
 

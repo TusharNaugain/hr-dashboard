@@ -6,7 +6,7 @@ import {
   ResponsiveContainer, Legend
 } from 'recharts';
 
-const COLORS = ['#6366f1','#10b981','#f59e0b','#ef4444','#8b5cf6','#06b6d4','#ec4899','#14b8a6'];
+const COLORS = ['#b87333','#5e8f63','#b8643c','#a04030','#7a6858','#4a7c8c','#9a7040','#5a7a5a'];
 
 const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload?.length) {

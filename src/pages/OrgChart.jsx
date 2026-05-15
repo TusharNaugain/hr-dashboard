@@ -4,12 +4,12 @@ import { Loading, avatarClass, initials } from '../utils.jsx';
 import { api } from '../api.js';
 
 const DEPT_COLORS = {
-  'HR': '#6366f1', 'Engineering': '#10b981', 'Finance': '#f59e0b', 'Sales': '#ef4444',
-  'Product': '#8b5cf6', 'Operations': '#06b6d4', 'Marketing': '#ec4899',
-  'Legal': '#14b8a6', 'Design': '#f97316', 'Data Science': '#84cc16'
+  'HR': '#b87333', 'Engineering': '#5e8f63', 'Finance': '#b8643c', 'Sales': '#a04030',
+  'Product': '#7a6858', 'Operations': '#4a7c8c', 'Marketing': '#9a7040',
+  'Legal': '#5a7a5a', 'Design': '#8c6a48', 'Data Science': '#6e8a6e'
 };
 
-function getDeptColor(dept) { return DEPT_COLORS[dept] || '#6366f1'; }
+function getDeptColor(dept) { return DEPT_COLORS[dept] || '#b87333'; }
 
 function OrgNode({ node, depth = 0 }) {
   const [expanded, setExpanded] = useState(depth < 2);

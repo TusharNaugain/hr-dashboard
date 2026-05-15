@@ -5,8 +5,8 @@ import { api } from '../api.js';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell, PieChart, Pie } from 'recharts';
 
 const QUARTERS = ['Q1-2025', 'Q2-2025', 'Q3-2025', 'Q4-2025'];
-const COLORS = ['#ef4444','#f59e0b','#6366f1','#10b981','#8b5cf6','#06b6d4'];
-const EXIT_COLORS = { 'Resignation': '#ef4444', 'Personal Reasons': '#f59e0b', 'Performance': '#8b5cf6', 'Internship Completed': '#10b981', 'Better Opportunity': '#06b6d4', 'Higher Studies': '#ec4899' };
+const COLORS = ['#a04030','#b87333','#7a6858','#5e8f63','#4a7c8c','#b8643c'];
+const EXIT_COLORS = { 'Resignation': '#a04030', 'Personal Reasons': '#b87333', 'Performance': '#7a6858', 'Internship Completed': '#5e8f63', 'Better Opportunity': '#4a7c8c', 'Higher Studies': '#b8643c' };
 
 const TT = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
@@ -188,7 +188,7 @@ export default function Attrition() {
                   <td style={{color:'var(--text-muted)',fontSize:12}}>{e.lastWorkingDay}</td>
                   <td><span className="badge badge-purple">{e.exitQuarter}</span></td>
                   <td>
-                    <span style={{fontSize:12,color: EXIT_COLORS[e.exitReason]||'#94a3b8',fontWeight:500}}>
+                    <span style={{fontSize:12,color: EXIT_COLORS[e.exitReason]||'#5c4a36',fontWeight:500}}>
                       {e.exitReason}
                     </span>
                   </td>

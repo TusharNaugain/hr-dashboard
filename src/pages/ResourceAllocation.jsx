@@ -8,22 +8,22 @@ const MONTHS = ['Jan-2025','Feb-2025','Mar-2025','Apr-2025','May-2025','Jun-2025
 const SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
 const ALLOC_COLORS = {
-  'Project Atlas': '#6366f1',
-  'Project Zenith': '#10b981',
-  'Project Nexus': '#f59e0b',
-  'Project Apollo': '#ef4444',
-  'Project Orion': '#8b5cf6',
-  'Project Falcon': '#06b6d4',
-  'Project Nova': '#ec4899',
-  'Project Vega': '#14b8a6',
-  'Project Titan': '#f97316',
-  'Internal – BAU': '#64748b',
-  'Internal – Support': '#94a3b8',
-  'Bench / Training': '#334155',
+  'Project Atlas':    '#b87333',
+  'Project Zenith':   '#5e8f63',
+  'Project Nexus':    '#b8643c',
+  'Project Apollo':   '#a04030',
+  'Project Orion':    '#7a6858',
+  'Project Falcon':   '#4a7c8c',
+  'Project Nova':     '#9a7040',
+  'Project Vega':     '#5a7a5a',
+  'Project Titan':    '#8c6a48',
+  'Internal – BAU':   '#7a7060',
+  'Internal – Support':'#8a8070',
+  'Bench / Training': '#6a6458',
 };
 
 function getAllocColor(project) {
-  return ALLOC_COLORS[project] || '#6366f1';
+  return ALLOC_COLORS[project] || '#b87333';
 }
 
 function AllocBar({ value, project }) {

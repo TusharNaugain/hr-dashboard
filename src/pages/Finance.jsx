@@ -7,13 +7,13 @@ import {
   PieChart, Pie, Cell
 } from 'recharts';
 
-const COLORS = ['#6366f1','#10b981','#f59e0b','#ef4444','#8b5cf6','#06b6d4','#ec4899','#14b8a6','#f97316','#84cc16'];
+const COLORS = ['#b87333','#5e8f63','#b8643c','#a04030','#7a6858','#4a7c8c','#9a7040','#5a7a5a','#8c6a48','#6e8a6e'];
 
 const TT = ({ active, payload, label }) => {
   if (!active || !payload?.length) return null;
   return (
-    <div style={{background:'#1a2235',border:'1px solid rgba(99,130,255,0.3)',borderRadius:8,padding:'10px 14px'}}>
-      <p style={{color:'#f1f5f9',fontWeight:600,marginBottom:4}}>{label}</p>
+    <div style={{background:'#fff',border:'1px solid rgba(180,148,100,0.3)',borderRadius:8,padding:'10px 14px',boxShadow:'0 2px 8px rgba(0,0,0,0.08)'}}>
+      <p style={{color:'#1c1410',fontWeight:600,marginBottom:4}}>{label}</p>
       {payload.map((p,i) => <p key={i} style={{color:p.color,fontSize:13}}>{p.name}: <strong>{p.value}</strong></p>)}
     </div>
   );
